@@ -4,8 +4,6 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-
-	"github.com/google/uuid"
 )
 
 const defaultTraceId = "X-Trace-Id"
@@ -59,7 +57,7 @@ func New(ctx context.Context, next http.Handler, config *Config, name string) (h
 
 func (t *TraceIDHeader) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	headerArr := req.Header[t.headerName]
-	randomUUID := fmt.Sprintf("%s%s", t.headerPrefix, uuid.New().String())
+	randomUUID := fmt.Sprintf("%s%s", t.headerPrefix, newUUID().String())
 	if len(headerArr) == 0 {
 		req.Header.Add(t.headerName, randomUUID)
 	} else if headerArr[0] == "" {
