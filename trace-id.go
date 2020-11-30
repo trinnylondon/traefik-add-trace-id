@@ -39,14 +39,18 @@ func New(ctx context.Context, next http.Handler, config *Config, name string) (h
 		name: name,
 	}
 
-	if config.HeaderName != "" {
+	if config == nil {
+		return nil, fmt.Errorf("config can not be nil")
+	}
+
+	if config.HeaderName == "" {
 		tIDHdr.headerName = defaultTraceId
 	} else {
 		tIDHdr.headerName = config.HeaderName
 	}
 
 	if config.HeaderPrefix != "" {
-		tIDHdr.headerPrefix = fmt.Sprintf("%s-", config.HeaderPrefix)
+		tIDHdr.headerPrefix = fmt.Sprintf("%s:", config.HeaderPrefix)
 	}
 
 	return tIDHdr, nil
@@ -55,7 +59,7 @@ func New(ctx context.Context, next http.Handler, config *Config, name string) (h
 
 func (t *TraceIDHeader) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	headerArr := req.Header[t.headerName]
-	randomUUID := fmt.Sprintf("%s", uuid.New().String())
+	randomUUID := fmt.Sprintf("%s%s", t.headerPrefix, uuid.New().String())
 	if len(headerArr) == 0 {
 		req.Header.Add(t.headerName, randomUUID)
 	} else if headerArr[0] == "" {
