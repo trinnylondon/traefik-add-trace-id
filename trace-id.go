@@ -1,4 +1,4 @@
-package platform
+package traefik_add_trace_id
 
 import (
 	"context"
