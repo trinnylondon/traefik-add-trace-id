@@ -20,9 +20,8 @@ func TestServeHTTP(t *testing.T) {
 			assertFunc: func(t *testing.T) http.Handler {
 				t.Helper()
 				return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-					if getTraceIdHeader(t, req, "X-Trace-Id") == "" {
-						t.Fatalf("got empty traceId header for %+v", req.Header)
-					}
+					hdr := getTraceIdHeader(t, req, "X-Trace-Id")
+					mustHaveLength(t, hdr, 36)
 				})
 			},
 		},
@@ -34,9 +33,8 @@ func TestServeHTTP(t *testing.T) {
 			assertFunc: func(t *testing.T) http.Handler {
 				t.Helper()
 				return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-					if getTraceIdHeader(t, req, "Other-Name") == "" {
-						t.Fatalf("got empty traceId header for %+v", req.Header)
-					}
+					hdr := getTraceIdHeader(t, req, "Other-Name")
+					mustHaveLength(t, hdr, 36)
 				})
 			},
 		},
@@ -49,10 +47,8 @@ func TestServeHTTP(t *testing.T) {
 				t.Helper()
 				return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 					hdr := getTraceIdHeader(t, req, "X-Trace-Id")
-
-					if !strings.HasPrefix(hdr, "myorg:") {
-						t.Fatalf("no prefix in traceId: %+v", req.Header["X-Trace-Id"])
-					}
+					mustHavePrefix(t, hdr, "myorg:")
+					mustHaveLength(t, hdr, 42)
 				})
 			},
 		},
@@ -66,10 +62,8 @@ func TestServeHTTP(t *testing.T) {
 				t.Helper()
 				return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 					hdr := getTraceIdHeader(t, req, "Other-Name")
-
-					if !strings.HasPrefix(hdr, "myorg:") {
-						t.Fatalf("no prefix in traceId: %+v", req.Header["Other-Name"])
-					}
+					mustHavePrefix(t, hdr, "myorg:")
+					mustHaveLength(t, hdr, 42)
 				})
 			},
 		},
@@ -89,7 +83,6 @@ func TestServeHTTP(t *testing.T) {
 			}
 
 			handler.ServeHTTP(recorder, req)
-
 		})
 	}
 }
@@ -101,4 +94,18 @@ func getTraceIdHeader(t *testing.T, req *http.Request, headerName string) string
 		return headerArr[0]
 	}
 	return ""
+}
+
+func mustHaveLength(t *testing.T, s string, l int) {
+	t.Helper()
+	if len(s) != l {
+		t.Fatalf("differing lengths: wanted %d, got %d(%s)", l, len(s), s)
+	}
+}
+
+func mustHavePrefix(t *testing.T, s, pref string) {
+	t.Helper()
+	if !strings.HasPrefix(s, pref) {
+		t.Fatalf("could not fix prefix %s in %s ", pref, s)
+	}
 }
