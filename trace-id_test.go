@@ -67,6 +67,18 @@ func TestServeHTTP(t *testing.T) {
 				})
 			},
 		},
+		{
+			name: "verbose",
+			config: &Config{
+				HeaderPrefix: "myorg",
+				HeaderName:   "Other-Name",
+				Verbose:      true,
+			},
+			assertFunc: func(t *testing.T) http.Handler {
+				t.Helper()
+				return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {})
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
