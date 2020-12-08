@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-const defaultTraceId = "X-Trace-Id"
+const defaultTraceId = "X-Trace-Id-Test"
 
 // Config the plugin configuration.
 type Config struct {

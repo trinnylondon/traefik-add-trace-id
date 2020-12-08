@@ -20,7 +20,7 @@ func TestServeHTTP(t *testing.T) {
 			assertFunc: func(t *testing.T) http.Handler {
 				t.Helper()
 				return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-					hdr := getTraceIdHeader(t, req, "X-Trace-Id")
+					hdr := getTraceIdHeader(t, req, "X-Trace-Id-Test")
 					mustHaveLength(t, hdr, 36)
 				})
 			},
@@ -46,7 +46,7 @@ func TestServeHTTP(t *testing.T) {
 			assertFunc: func(t *testing.T) http.Handler {
 				t.Helper()
 				return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-					hdr := getTraceIdHeader(t, req, "X-Trace-Id")
+					hdr := getTraceIdHeader(t, req, "X-Trace-Id-Test")
 					mustHavePrefix(t, hdr, "myorg:")
 					mustHaveLength(t, hdr, 42)
 				})
