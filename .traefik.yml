@@ -5,3 +5,4 @@ summary: 'Add a header for tracing if one does not exist already'
 testData:
   headerName: 'X-Trace-Id'
   headerPrefix: ''
+  verbose: false
