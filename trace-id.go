@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-const defaultTraceId = "X-Trace-Id-Test"
+const defaultTraceID = "X-Trace-Id"
 
 // Config the plugin configuration.
 type Config struct {
@@ -20,7 +20,7 @@ type Config struct {
 func CreateConfig() *Config {
 	return &Config{
 		HeaderPrefix: "",
-		HeaderName:   defaultTraceId,
+		HeaderName:   defaultTraceID,
 	}
 }
 
@@ -46,7 +46,7 @@ func New(ctx context.Context, next http.Handler, config *Config, name string) (h
 	}
 
 	if config.HeaderName == "" {
-		tIDHdr.headerName = defaultTraceId
+		tIDHdr.headerName = defaultTraceID
 	} else {
 		tIDHdr.headerName = config.HeaderName
 	}
