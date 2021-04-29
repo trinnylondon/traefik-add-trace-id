@@ -47,8 +47,8 @@ func TestServeHTTP(t *testing.T) {
 				t.Helper()
 				return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 					hdr := getTraceIdHeader(t, req, "X-Trace-Id")
-					mustHavePrefix(t, hdr, "myorg:")
-					mustHaveLength(t, hdr, 42)
+					mustHavePrefix(t, hdr, "myorg")
+					mustHaveLength(t, hdr, 41)
 				})
 			},
 		},
@@ -62,8 +62,8 @@ func TestServeHTTP(t *testing.T) {
 				t.Helper()
 				return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 					hdr := getTraceIdHeader(t, req, "Other-Name")
-					mustHavePrefix(t, hdr, "myorg:")
-					mustHaveLength(t, hdr, 42)
+					mustHavePrefix(t, hdr, "myorg")
+					mustHaveLength(t, hdr, 41)
 				})
 			},
 		},

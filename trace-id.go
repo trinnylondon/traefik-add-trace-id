@@ -51,9 +51,7 @@ func New(ctx context.Context, next http.Handler, config *Config, name string) (h
 		tIDHdr.headerName = config.HeaderName
 	}
 
-	if config.HeaderPrefix != "" {
-		tIDHdr.headerPrefix = fmt.Sprintf("%s:", config.HeaderPrefix)
-	}
+	tIDHdr.headerPrefix = config.HeaderPrefix
 
 	return tIDHdr, nil
 
